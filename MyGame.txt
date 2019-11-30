@@ -1,0 +1,922 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package project;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+/**
+ *
+ * @author khoaleeeeee
+ */
+public class MyGame {
+    
+    JButton startbutton, choice1, choice2, choice3, choice4; 
+    Container con;
+    JFrame window; 
+    JPanel gametitlePanel, buttonpanel, mainTextPanel, playerPanel, choiceButtonPanel;
+    JLabel gametitleLabel, mainTextLabel, SupportTextLabel, hpLabel, hpLabelNumber, weaponLabel, weaponLabelName
+            ,playerNameLabel, showNameLabel;
+    Font titleFont = new Font("Times New Roman", Font.PLAIN, 90);
+    Font normalFont = new Font("Times New Roman", Font.PLAIN, 28);
+    TitleScreenHandler tsHandler = new TitleScreenHandler();
+    ChoiceHandler choiceHandler = new ChoiceHandler();
+    Random random = new Random();
+    
+   
+    sword cannon = new sword ("Ultimate Wizard","Cannon",200);
+    sword sword = new sword("Warrior","Sword",5); 
+    sword pistol = new sword("Goblin","Gun",10); 
+    sword horns = new sword("Minotaur","Horns",30);
+    sword newsword = new sword("Aegeus","Sword",150); 
+    sword newgun = new sword("Aegeus","Gun",150); 
+    sword flame = new  sword("Dragon","Flame",50); 
+    
+    sword currentwp = sword;
+    
+    character player = new character("Dang","Warrior", 100, sword);
+    character goblin = new character("Goblin","Monster", 20, pistol);
+    character minotaur = new character("Minotaur","Monster", 300, horns);
+    character dragon = new character("Dragon","Monster", 1000, flame);
+    
+    int quiz=0, hpPlayer = player.getHitpoints(), chance = random.nextInt(2), hpGoblin = goblin.getHitpoints(), hpMinotaur = minotaur.getHitpoints(),hpDragon = dragon.getHitpoints() ;
+    String action;
+    
+    
+    
+    public static void main(String[] args) {
+    new MyGame();
+       
+        
+    }
+    public MyGame(){
+  
+     window = new JFrame();
+		window.setSize(850, 600);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.getContentPane().setBackground(Color.black);
+		window.setLayout(null);
+		window.setVisible(true);
+                
+     gametitlePanel = new JPanel(); 
+     gametitlePanel.setBounds(100, 100, 600, 100);
+     gametitlePanel.setBackground(Color.black);
+                
+     gametitleLabel = new JLabel("Unnamed Game");      
+     gametitleLabel.setForeground(Color.red);
+     gametitleLabel.setFont(titleFont);
+  
+     gametitlePanel.add(gametitleLabel);
+     window.add(gametitlePanel);
+     
+     buttonpanel = new JPanel();
+     buttonpanel.setBounds(300, 400, 200, 100);
+     buttonpanel.setBackground(Color.black);
+     
+     startbutton = new JButton("Begin");
+     startbutton.setForeground(Color.red);
+     startbutton.setFont(normalFont);
+     startbutton.addActionListener(tsHandler);
+     
+     buttonpanel.add(startbutton);    
+     window.add(buttonpanel);
+
+     
+    }
+    public void LosingScreen(){
+    buttonpanel.setVisible(true);
+    gametitlePanel.setVisible(true);   
+    mainTextPanel.setVisible(false);
+    playerPanel.setVisible(false);
+    choice1.setVisible(false);
+    choice2.setVisible(false);
+    choice3.setVisible(false);
+    choice4.setVisible(false);
+    
+    gametitleLabel.setText("YOU LOSE"); 
+    startbutton.setText("Play Again");
+    
+    
+
+    }
+    
+    
+    
+    public void GameScreen(){
+    
+    buttonpanel.setVisible(false);
+    gametitlePanel.setVisible(false);
+    
+    mainTextPanel = new JPanel();
+    mainTextPanel.setBounds(50, 100, 800, 250);
+    mainTextPanel.setBackground(Color.black);
+    
+    
+    mainTextLabel = new JLabel("Welcome to the new adventure!");
+    mainTextLabel.setForeground(Color.white);
+    mainTextLabel.setFont(normalFont);
+    
+    SupportTextLabel = new JLabel("");
+    SupportTextLabel.setForeground(Color.white);
+    SupportTextLabel.setFont(normalFont);
+
+    
+    mainTextPanel.add(mainTextLabel);
+    mainTextPanel.add(SupportTextLabel);
+    window.add(mainTextPanel);
+    
+    playerPanel = new JPanel();
+    playerPanel.setBounds(5, 15, 850, 70);
+    playerPanel.setBackground(Color.black);
+    
+    playerNameLabel = new JLabel("Player:");
+    playerNameLabel.setFont(normalFont);
+    playerNameLabel.setForeground(Color.orange);
+    playerPanel.add(playerNameLabel);
+    
+    showNameLabel = new JLabel();
+    showNameLabel.setFont(normalFont);
+    showNameLabel.setForeground(Color.orange);
+    showNameLabel.setText(player.getName()+ "\t-\t" +player.getRace());
+    playerPanel.add(showNameLabel);
+    
+    hpLabel = new JLabel("\t\tHP:");
+    hpLabel.setFont(normalFont);
+    hpLabel.setForeground(Color.orange);
+    
+    playerPanel.add(hpLabel);
+    window.add(playerPanel);
+    
+    hpLabelNumber = new JLabel();
+    hpLabelNumber.setFont(normalFont);
+    hpLabelNumber.setForeground(Color.orange);
+    hpLabelNumber.setText(Integer.toString(hpPlayer));
+    playerPanel.add(hpLabelNumber);
+    
+    weaponLabel = new JLabel("\t\tWeapon:");
+    weaponLabel.setFont(normalFont);
+    weaponLabel.setForeground(Color.orange);
+    
+    playerPanel.add(weaponLabel);
+    
+    weaponLabelName = new JLabel();
+    weaponLabelName.setFont(normalFont);
+    weaponLabelName.setForeground(Color.orange);
+    weaponLabelName.setText(currentwp.toString());
+    
+    playerPanel.add(weaponLabelName);
+    
+    choiceButtonPanel = new JPanel();
+		choiceButtonPanel.setBounds(300, 350, 300, 300);
+		choiceButtonPanel.setBackground(Color.black);
+		choiceButtonPanel.setLayout(new GridLayout(7,3));
+    
+                choice1 = new JButton("Choice 1");
+		choice1.setBackground(Color.black);
+		choice1.setForeground(Color.black);
+		choice1.setFont(normalFont);
+		choice1.setFocusPainted(false);
+		choice1.addActionListener(choiceHandler);                
+		choice1.setActionCommand("c1");
+		choiceButtonPanel.add(choice1);
+                
+		choice2 = new JButton("Choice 2");
+		choice2.setBackground(Color.black);
+		choice2.setForeground(Color.black);
+		choice2.setFont(normalFont);
+		choice2.setFocusPainted(false);
+		choice2.addActionListener(choiceHandler);
+		choice2.setActionCommand("c2");
+		choiceButtonPanel.add(choice2);
+                
+                choice3 = new JButton("Choice 3");
+		choice3.setBackground(Color.black);
+		choice3.setForeground(Color.black);
+		choice3.setFont(normalFont);
+		choice3.setFocusPainted(false);
+		choice3.addActionListener(choiceHandler);
+		choice3.setActionCommand("c3");
+		choiceButtonPanel.add(choice3);
+                           
+		choice4 = new JButton("Choice 4");
+		choice4.setBackground(Color.black);
+		choice4.setForeground(Color.black);
+		choice4.setFont(normalFont);
+		choice4.setFocusPainted(false);
+		choice4.addActionListener(choiceHandler);
+		choice4.setActionCommand("c4");
+		choiceButtonPanel.add(choice4);
+    
+                window.add(choiceButtonPanel);
+                
+                Gate();
+    
+    }
+    
+    public void Gate(){
+    action = "Gate"; 
+    mainTextLabel.setText("You're at the cave gate! What do you do?");
+    hpPlayer = 100; 
+    currentwp = sword; 
+    choice1.setVisible(true);
+    choice2.setVisible(true);
+    choice3.setVisible(true);
+    
+    choice1.setText("Sleep for a day");
+    choice2.setText("Get in");
+    choice3.setText("Leave there");
+    choice4.setVisible(false);
+ 
+    }
+    
+    
+    public void FirstEncounter(){
+    action = "Goblin"; 
+    mainTextLabel.setText("You encounter a goblin!!!");
+    SupportTextLabel.setText(goblin.toString());
+    choice1.setVisible(true);
+    choice1.setText("Fight him");
+    if (hpPlayer>200){choice2.setVisible(false);}
+    else
+    choice2.setVisible(true);
+    choice2.setText("Run away");
+    choice3.setText("Ask him");
+    choice4.setVisible(false);
+ 
+    }
+    
+    public void StrangeThing(){
+    action = "StrangeThing";
+    SupportTextLabel.setVisible(true);
+    SupportTextLabel.setText("Wait...he drops SOMETHING!?");
+    choice2.setVisible(true);
+    choice1.setText("Pick it up");
+    choice2.setText("Ignore it");
+    choice3.setVisible(false);
+    choice4.setVisible(false);
+    
+    
+    }
+    
+
+    
+    public void playerAttack(sword playerwp){
+        
+     action = "playerattackgoblin";
+     hpGoblin = hpGoblin - playerwp.getStat();
+     mainTextLabel.setText("FIGHTING PROCESS Goblin HP: "+ Integer.toString(hpGoblin));
+      choice1.setText("Keep fighting");
+      choice2.setText("Run away");
+      choice3.setVisible(false);
+      choice4.setVisible(false);
+ 
+  
+    }  
+       
+     public void EnemyAttack(sword enemywp){
+     action = "goblinattack";
+     hpPlayer = hpPlayer - enemywp.getStat();
+     if(hpPlayer<0){hpLabelNumber.setText("0");}
+     else
+     hpLabelNumber.setText(Integer.toString(hpPlayer));
+
+     choice1.setText("Keep fighting");
+     choice2.setText("Run away");
+     choice3.setVisible(false);
+     choice4.setVisible(false);
+    
+    }          
+
+    
+    public void PickUp(){
+        action = "pickup";
+        
+    mainTextLabel.setVisible(false);
+    currentwp = pistol;
+    player.getEquip().equals(currentwp);
+    weaponLabelName.setText(currentwp.toString());
+    SupportTextLabel.setText("You found a new weapon: "+ currentwp.toString());
+    SupportTextLabel.setForeground(Color.red);
+    choice1.setVisible(true); 
+    choice2.setVisible(true); 
+    
+    choice1.setText("Keep going foward");
+    choice2.setText("Discover the cave");
+    choice3.setVisible(false);   
+
+    }
+    public void Wizard(){
+    action = "wizard";     
+    mainTextLabel.setVisible(true);     
+    mainTextLabel.setText("You see a Wizard! He seems wacky!"); 
+    SupportTextLabel.setText("Wizard: Are you lost?"); 
+    SupportTextLabel.setForeground(Color.white);
+    choice1.setVisible(true); 
+    choice2.setVisible(true);     
+    choice1.setText("Fight him");
+    choice2.setText("Ask him where to go");
+    choice3.setVisible(false);   
+
+    }
+    
+    public void Quiz(){
+    action = "quizz";  
+    SupportTextLabel.setVisible(true);
+    mainTextLabel.setText("Wizard: You want to know? answer my question:"); 
+    SupportTextLabel.setText("Where does June come before May?"); 
+      
+      choice1.setVisible(true);
+      choice2.setVisible(true);
+      choice3.setVisible(true);
+      choice4.setVisible(true);
+      
+      choice1.setText("Perpetual Calendar");
+      choice2.setText("Dictionary");
+      choice3.setText("Imagination");
+      choice4.setText("Mars");
+    
+    }
+    
+    public void Correct(){
+    action = "correct";
+    mainTextLabel.setText("Wizard: That's correct! You proved that you deserve this weapon!"); 
+    if (currentwp == pistol && hpPlayer >300){
+    SupportTextLabel.setText("This is the gift for you! just go straight, the Dragon is there!");
+      
+    choice2.setVisible(false);
+    choice3.setVisible(false);
+    choice4.setVisible(false);
+    choice1.setText("Receive the  gift");
+   
+    }    
+    else 
+    { 
+      mainTextLabel.setText("Wizard: That's correct!");
+      SupportTextLabel.setText("Just go straight, the Dragon is there!");
+      choice1.setVisible(false);
+      choice2.setVisible(true);
+      choice3.setVisible(false);
+      choice4.setVisible(false);
+      choice2.setText("Go straight");
+    }
+    
+
+    
+    }
+    
+    public void Cannon(){
+    action = "cannon";
+    mainTextLabel.setVisible(false);
+    currentwp = cannon;
+    player.getEquip().equals(currentwp);
+    weaponLabelName.setText(currentwp.toString());
+    SupportTextLabel.setText("He's upgraded your weapon: "+ currentwp.toString());
+    SupportTextLabel.setForeground(Color.red);
+    
+    choice1.setText("Go Straight");
+    choice2.setText("Go back");
+    choice1.setVisible(true);
+    choice2.setVisible(true);
+    
+    }
+    
+    
+    public void TheHole(){     
+    action = "Hole";
+    mainTextLabel.setVisible(true);
+    mainTextLabel.setText("You acidentally fall into a hole!");
+    hpLabelNumber.setText(Integer.toString(hpPlayer));
+    SupportTextLabel.setVisible(true);
+    SupportTextLabel.setForeground(Color.white);
+    SupportTextLabel.setText("You can't go up anymore! There are two ways there:");
+    choice2.setVisible(true); 
+    choice1.setText("Go left");
+    choice2.setText("Go right");
+    choice3.setVisible(false);    
+    }
+    
+    
+    public void Minotaur(){
+    action = "Minotaur";
+    mainTextLabel.setVisible(true);
+    mainTextLabel.setText("You encounter Minotaur!!!");
+    SupportTextLabel.setText(minotaur.toString());
+    choice2.setVisible(true);
+    choice1.setText("Run away");
+    choice2.setText("Fight him");
+    choice3.setText("Ask him");          
+        
+    }
+    
+        public void playerAttack2(sword playerwp){
+        
+     action = "playerattackminotaur";
+     
+     hpMinotaur = hpMinotaur - playerwp.getStat();
+     mainTextLabel.setText("FIGHTING PROCESS Minotaur HP: "+ Integer.toString(hpMinotaur));
+     choice1.setVisible(true);
+     choice1.setText("Keep fighting");
+      choice2.setVisible(false);
+      choice3.setVisible(false);
+      choice4.setVisible(false);
+ 
+  
+    }  
+       
+     public void EnemyAttack2(sword enemywp){
+     action = "minotaurattack";
+     hpPlayer = hpPlayer - enemywp.getStat();
+     if(hpPlayer<0){       hpLabelNumber.setText("0");}
+     else
+     hpLabelNumber.setText(Integer.toString(hpPlayer));
+
+     choice1.setText("Keep fighting");
+     choice2.setVisible(false);
+     choice3.setVisible(false);
+     choice4.setVisible(false);
+    
+    }    
+    
+     public void Fairy(){
+         action = "fairy";
+    mainTextLabel.setVisible(true);
+    mainTextLabel.setText("At the end of the dungeon, you see a little fairy in a case!?");
+    SupportTextLabel.setText("The Fairy: Hi, my name is Pix! Would you set me free from this case?");
+    choice1.setText("Set her free");
+    choice2.setText("Go back to the cross");   
+     
+     }
+      public void FairyFree() {
+       action = "fairyfree";
+    mainTextLabel.setText("Pix: Thank you, warrior! I was captured by Minotaur, he keeps me here!");
+    if (currentwp == cannon){
+        SupportTextLabel.setText("To show gratitude, I'll go with you!");
+    choice1.setVisible(false);
+    choice2.setVisible(true);
+    choice2.setText("Go back to the cross");
+    choice3.setVisible(false); 
+   }
+    
+    else 
+    {
+    SupportTextLabel.setText("To show gratitude, I have a gift for you!");
+    choice1.setText("Receive the gift");
+    choice2.setVisible(false);
+    choice3.setVisible(false); 
+    
+    
+    }
+      }
+     public void SwordBooster() {
+     action = "swordbooster";
+     mainTextLabel.setVisible(true);
+     
+     if (currentwp == sword){
+     mainTextLabel.setText("WOW, Something is happening with you sword? It's shinning!?");
+     SupportTextLabel.setText("You got a new weapon Sword of Aegeus!!!");
+     currentwp = newsword;
+     }
+     else {
+     mainTextLabel.setText("WOW, Something is happening with you gun? It's shinning!?");
+     SupportTextLabel.setText("You got a new weapon Gun of Aegeus!!!");
+     currentwp = newgun;
+     }
+     
+     weaponLabelName.setText(currentwp.toString());
+     SupportTextLabel.setText("You found a new weapon: "+ currentwp.toString());
+     SupportTextLabel.setForeground(Color.red);
+     choice1.setText("Go back to the cross");  
+     
+     
+     }
+     
+     public void WinMinotaur(){
+      action = "winminotaur";    
+      mainTextLabel.setText("You defeated Minotaur!");     
+      SupportTextLabel.setVisible(true);
+      
+      if (currentwp == newsword){
+      SupportTextLabel.setText("Pix: Your sword becomes normal now, my magic only effects in 1 fight");
+      currentwp = sword;
+      }
+      if (currentwp == newgun){
+      SupportTextLabel.setText("Pix: Your gun becomes normal now, my magic only effects in 1 fight");
+      currentwp = pistol;
+      }
+      
+      weaponLabelName.setText(currentwp.toString());
+      choice1.setVisible(true);
+      choice2.setVisible(false);
+      choice2.setVisible(false);
+      choice1.setText("Ask Pix what to do!");   
+
+     }
+     public void TakeArmor(){
+        action = "getarmor";
+        SupportTextLabel.setForeground(Color.red);
+         mainTextLabel.setText("Pix: Minotaur's armor is made from the toughest material. You may need it!");
+         SupportTextLabel.setText("You obtain a Minotaur's armor! HP +300");
+         hpPlayer = hpPlayer+300; 
+         hpLabelNumber.setText(Integer.toString(hpPlayer));
+         choice1.setText("Ask Pix what to do!");
+                 
+     }
+      public void getOn(){
+        action = "geton";
+        SupportTextLabel.setForeground(Color.white);
+        mainTextLabel.setText("Pix: This is the flying boost. With it you can fly back on the hole!");
+        SupportTextLabel.setText("Sorry, I can't go with you farther. Good luck, warrior!");
+
+        choice1.setText("Fly on the hole");                
+     
+      }
+       public void Dragon(){
+       action = "dragon";
+       mainTextLabel.setVisible(true);
+       SupportTextLabel.setVisible(true);
+       mainTextLabel.setText("You encounter the Boss Dragon!!!");
+       SupportTextLabel.setText(dragon.toString());
+       choice1.setVisible(true);
+       choice2.setVisible(false);
+       choice1.setText("Fight him");
+           
+       }
+      
+       public void playerAttack3(sword playerwp){
+        
+     action = "playerattackdragon";
+     
+     hpDragon = hpDragon - playerwp.getStat();
+     mainTextLabel.setText("FIGHTING PROCESS Dragon HP: "+ Integer.toString(hpDragon));
+     choice1.setVisible(true);
+     choice1.setText("Keep fighting");
+      choice2.setVisible(false);
+      choice3.setVisible(false);
+      choice4.setVisible(false);
+ 
+  
+    }  
+       
+     public void EnemyAttack3(sword enemywp){
+     action = "dragonattack";
+     hpPlayer = hpPlayer - enemywp.getStat();
+     if(hpPlayer<0){
+     hpLabelNumber.setText("0");}
+     else
+     hpLabelNumber.setText(Integer.toString(hpPlayer));
+
+     choice1.setText("Keep fighting");
+     choice2.setVisible(false);
+     choice3.setVisible(false);
+     choice4.setVisible(false);
+    
+    }     
+
+     
+    
+    public class TitleScreenHandler implements ActionListener{
+		
+	public void actionPerformed(ActionEvent event){
+        GameScreen(); 
+        }
+	}
+   
+    public class ChoiceHandler implements ActionListener{
+		
+        public void actionPerformed(ActionEvent event){
+        String yourChoice = event.getActionCommand();
+        
+        switch (action){
+            case "Gate":
+                switch (yourChoice){
+                    case "c1":
+                        mainTextLabel.setText("You feel better! HP +10 ");  
+                        hpPlayer = hpPlayer+10;
+                        hpLabelNumber.setText(Integer.toString(hpPlayer));
+                        choice1.setVisible(false);
+                        break;
+                       
+                    case "c2":
+                         FirstEncounter();
+                         break;
+                         
+                    case "c3":
+                          mainTextLabel.setText("You coward! Just get in or exit the game!");                   
+                          break;        
+                                                  
+                }
+                break;
+                
+            case "Goblin":
+                switch (yourChoice){
+                    case "c1": 
+                        playerAttack(currentwp);
+                        SupportTextLabel.setVisible(false);
+                
+                break;
+                    case "c2": 
+                        TheHole();
+                        break;
+                        
+                    case "c3":
+                         mainTextLabel.setText("Goblin: Human? I can't let human in!");
+                         break;
+                }         
+                         break;        
+            case "Hole":
+                switch (yourChoice){
+                    case "c1": choice1.setVisible(false); Minotaur(); break;     
+                    case "c2": 
+                    if(currentwp == newsword || currentwp ==newgun){
+                    mainTextLabel.setVisible(true);  
+                    mainTextLabel.setText("You have nothing to do there!");
+                    }
+                    else
+                    Fairy(); break;
+                }
+            break;                 
+            
+            case "fairy": 
+                switch (yourChoice){
+                    case "c1": FairyFree(); break;
+                    case "c2": TheHole(); 
+                    mainTextLabel.setVisible(false);
+                    break; 
+                }
+                break;
+                
+            case "fairyfree":
+                 switch (yourChoice){
+                    case "c1": SwordBooster(); break;
+                    case "c2": TheHole();
+                    mainTextLabel.setVisible(false);
+                    choice1.setVisible(true);
+                    choice2.setVisible(true);
+                    break;
+                }
+                 break;
+                 
+            case "swordbooster":
+                switch (yourChoice){
+                    case "c1": 
+                    TheHole();
+                    mainTextLabel.setVisible(false);
+                    SupportTextLabel.setForeground(Color.white);
+                    
+                    break;
+                }
+                 break;
+                
+            
+            case "Minotaur":
+                switch (yourChoice){                  
+                     case "c1":
+                         if(chance ==1){
+                            choice1.setVisible(true);
+                            choice2.setVisible(true);
+                            mainTextLabel.setVisible(false);
+                             SupportTextLabel.setVisible(true);
+                            TheHole(); }
+                         else 
+                     mainTextLabel.setText("Oops! He caught you!");
+                     choice1.setVisible(false);
+                     SupportTextLabel.setVisible(false);            
+                    break;    
+                    case "c2":    
+                    playerAttack2(currentwp);
+                    SupportTextLabel.setVisible(false);
+
+                    break;                                     
+                }
+                break;
+                
+            case "playerattackminotaur": 
+                switch (yourChoice){
+                    case "c1":
+                    if(hpMinotaur<1){
+                      WinMinotaur();
+                      
+                      }
+                      else{
+                     EnemyAttack2(horns);
+                      }
+                      break;
+                } 
+                break;
+            case "minotaurattack":
+                switch (yourChoice){
+                    case "c1":
+                        if(hpPlayer<1){
+                       mainTextLabel.setText("You lose!");
+                       LosingScreen();
+  
+                      }             
+                      else{
+                     playerAttack2(currentwp);
+                      }
+                      break;
+                } 
+                break;    
+                
+            case "winminotaur" :
+                switch (yourChoice){
+                    case "c1":TakeArmor(); 
+                     break;}
+                break;
+            case "getarmor":
+                 switch (yourChoice){
+                    case "c1": getOn(); 
+                    break;
+                 }
+                 break;
+                 
+            case "geton":
+            switch (yourChoice){
+                    case "c1": 
+                        if(hpGoblin ==0) {Wizard(); break;}
+                        else if (currentwp == cannon){Dragon(); break;}
+                        else FirstEncounter();
+                    break;}
+            break;
+                        
+                        
+                                       
+            case "playerattackgoblin": 
+                switch (yourChoice){
+                    case "c1":
+                    if(hpGoblin<1){
+                       mainTextLabel.setText("You defeated the goblin!");
+                       StrangeThing();
+                      }
+                      else{
+                     EnemyAttack(pistol);
+                      }
+                      break;
+                    case "c2":
+                        TheHole();
+                        break;
+                } 
+                break;
+            case "goblinattack":
+                switch (yourChoice){
+                    case "c1":
+                        if(hpPlayer<1){
+                       mainTextLabel.setText("You lose");
+                      }
+                      else{
+                     playerAttack(currentwp);
+                      }
+                      break;
+                } 
+                break;
+            case "StrangeThing":
+                switch (yourChoice){
+                    case "c1": PickUp(); break; 
+                    case "c2": Wizard(); break;
+                }
+                break;
+                
+            
+            case "pickup":
+                 switch (yourChoice){
+                    case "c1":
+                        Wizard();
+                        break;
+                    case "c2": 
+                        if (hpPlayer>200){
+                            mainTextLabel.setVisible(true);
+                            mainTextLabel.setText("You discovered almost the cave"); break;}
+                        else
+                        TheHole();
+                        break;
+                 }
+                 break;
+            case "wizard":
+                switch (yourChoice){
+                    case "c1":
+                        if(hpPlayer<0){
+                            hpLabelNumber.setText("0"); 
+                            LosingScreen();
+                            break;
+                        }
+                        else
+                        mainTextLabel.setText("Don't be stupid!");
+                        SupportTextLabel.setVisible(false);                       
+                        hpPlayer = hpPlayer - 20;
+                        hpLabelNumber.setText(Integer.toString(hpPlayer));
+                        break;
+                    case "c2": 
+                    Quiz();
+                    break;
+                }
+                break;
+            case "quizz":    
+                 switch (yourChoice){
+                     case "c1": 
+                         SupportTextLabel.setVisible(true);  
+                         if (quiz==2){LosingScreen(); break;}
+                         else{                         
+                         mainTextLabel.setText("Incorrect answer!"); 
+                         quiz +=1;
+                         break;}
+                     case "c3":
+                         SupportTextLabel.setVisible(true);  
+                         if (quiz==2){LosingScreen(); break;}
+                         else{  
+                         mainTextLabel.setText("Incorrect answer!"); 
+                         quiz +=1;
+                         break;}
+                       case "c4":
+                         SupportTextLabel.setVisible(true);  
+                         if (quiz==2){LosingScreen(); break;}
+                         else{  
+                         mainTextLabel.setText("Incorrect answer!"); 
+                         quiz +=1;
+                         break;   }
+                       case "c2": Correct(); break;  }
+                 break;
+            case "correct":
+                 switch (yourChoice){
+                     case "c1": 
+                     Cannon();
+                     break;     
+                     case "c2":
+                     Dragon();
+                     break;
+                 }
+                 break;
+            case "cannon":
+                switch (yourChoice){
+                     case "c2": 
+                         if (hpMinotaur <= 0) {
+                          mainTextLabel.setVisible(true);
+                          SupportTextLabel.setVisible(false);
+                          mainTextLabel.setText("You have nothing to do there");
+                         break;
+                         } 
+                         else     TheHole();
+                     break;                 
+                     case "c1": Dragon();
+                }
+                break;
+            
+             case "dragon":  
+                 switch (yourChoice){
+                     case "c1": 
+                    playerAttack3(currentwp);
+                    SupportTextLabel.setVisible(false);
+                    break;
+                 }
+                 break;
+                
+                
+             case "playerattackdragon": 
+                switch (yourChoice){
+                    case "c1":
+                    if(hpDragon<1){   
+                      mainTextLabel.setText("You defeated the Dragon!");
+                      SupportTextLabel.setVisible(false);
+                      }
+                      else{
+                     EnemyAttack3(flame);                    
+                      }
+                    break;
+                }
+                break;
+                                
+            case "dragonattack":
+                switch (yourChoice){
+                    case "c1":
+                        if(hpPlayer<1){
+                       mainTextLabel.setText("You lose");
+                       SupportTextLabel.setText("Congratulations!!! You won the game!!!");
+                      }
+                      else{
+                     playerAttack3(currentwp);
+                      }
+                      break;
+                } 
+                break;    
+                               
+        
+}
+    }
+    }
+    }
+
+
+
+
