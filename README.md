@@ -1,3 +1,5 @@
+# Adventure Text Game by khoaleeeeee
+
 This is my final project in my Java class at Mission College.
 Year: 2018
 Language: Java.
